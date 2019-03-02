@@ -752,7 +752,8 @@ export default {
   border-bottom: 1px solid #ededed;
   box-sizing: border-box;
   font-weight: 400;
-  border-left: 0.15rem solid #f5f5f5;
+  padding-left: 0.5%;
+  border-left: 1.5% solid #f5f5f5;
 }
 /* 动态绑定class */
 .change {
