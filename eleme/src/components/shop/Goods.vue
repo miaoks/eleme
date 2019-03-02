@@ -13,7 +13,7 @@
             <span
               v-for="(spec_foo,index_foo) in basket_hidden_data.specfoods"
               :key="index_foo"
-              @click.stop="change_spec_color(index_foo)"
+              @click.stop="change_spec_color(index_foo,basket_hidden_data.item_id,spec_foo.food_id,basket_hidden_data.specfoods)"
               :class="{'change1':index_data==index_foo}"
               class="change2"
             >{{spec_foo.specs_name}}</span>
@@ -21,7 +21,7 @@
         </div>
         <div class="add_buyer">
           <span>￥{{spec_price}}</span>
-          <span @click="buyer_hidden()">加入购物车</span>
+          <span @click="buyer_hidden(basket_hidden_data.specfoods)">加入购物车</span>
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@
                   <span class="ellipsis">...</span>
                 </div>
                 <!-- 内容展示 -->
-                <ul class="goods_show" v-for="(detail,inde) in food.foods" :key="inde" @click="to_goodsDetail(detail)">
+                <ul class="goods_show" v-for="(detail,inde) in food.foods" :key="inde">
                   <li>
                     <div class="intro_wrap">
                       <div class="pic_wrap">
@@ -77,23 +77,33 @@
                     <div class="price_wrap">
                       <span class="price_start">￥{{detail.specfoods[0].price}}起</span>
                       <span v-if="detail.specfoods[0].specs.length!=0" class="spec_choose_wrap">
-                        <span style="display:none">
+                        <span v-if="loopfood(detail.item_id)">
                           <i class="el-icon-remove-outline add_choice_first"></i>
-                          <span class="add_count_first">0</span>
+                          <span
+                            class="add_count_first"
+                            :id="detail.specfoods[0].foods_id"
+                            v-text="loopfood(detail.item_id)"
+                          ></span>
                         </span>
-                        <span class="add_choose" @click="to_hidden($event,i,inde)">选规格</span>
+                        <span
+                          class="add_choose"
+                          @click="to_hidden($event,i,inde,detail.item_id)"
+                        >选规格</span>
                       </span>
                       <span class="add_but" v-else>
-                        <span style="display:none">
+                        <span v-if="yesorno(detail.item_id,detail.specfoods[0].food_id)">
                           <i
                             class="el-icon-remove-outline add_choice_second"
-                            @click="delete_order_count($event,i,inde)"
+                            @click="delete_order_count(detail.item_id,detail.specfoods[0].food_id,i,inde)"
                           ></i>
-                          <span class="add_count_second">0</span>
+                          <span
+                            class="add_count_second"
+                            v-text="yesorno(detail.item_id,detail.specfoods[0].food_id)"
+                          ></span>
                         </span>
                         <i
                           class="el-icon-circle-plus add_mark"
-                          @click.stop="add_order_count($event,i,inde)"
+                          @click.stop="add_order_count(detail.item_id,detail.specfoods[0].food_id,detail.specfoods)"
                         ></i>
                       </span>
                     </div>
@@ -111,35 +121,48 @@
           <li class="basket_list_title">
             <span>购物车</span>
             <i class="el-icon-delete"></i>
-            <span>清空</span>
+            <span @click="clear()">清空</span>
           </li>
-          <li class="list_show" v-for="(value,ind) in chart_data.cart.groups[0]" :key="ind">
-            <p class="list_name">
-              <span class="list_name_choice">{{value.name}}</span>
-              <span class="list_name_specs" v-if="value.specs.length>0">{{value.specs[0]}}</span>
-            </p>
-            <p class="list_price">￥{{value.price}}</p>
-            <p class="list_quantity">
-              <i class="el-icon-remove-outline" @click="add_list()"></i>
-              <span>{{value.quantity}}</span>
-              <i class="el-icon-circle-plus-outline" @click="delete_list()"></i>
-            </p>
-          </li>
+          <section v-for="(value,key,ind) in item_id_obj" :key="ind">
+            <section v-for="(v,i) in value.food" :key="i">
+              <li class="list_show" v-if="value[value.food[i].food_id]">
+                <p class="list_name">
+                  <span class="list_name_choice">{{value.food[i].name}}</span>
+                  <span
+                    v-if="value.food.length>1"
+                    class="list_name_specs"
+                  >{{value.food[i].specs_name}}</span>
+                </p>
+                <p class="list_price">￥{{value.food[i].price}}</p>
+                <p class="list_quantity">
+                  <i
+                    class="el-icon-remove-outline"
+                    @click.stop="delete_list(key,value.food[i].food_id,ind)"
+                  ></i>
+                  <span>{{value[value.food[i].food_id]}}</span>
+                  <i
+                    class="el-icon-circle-plus-outline"
+                    @click.stop="add_list(key,value.food[i].food_id,value.food)"
+                  ></i>
+                </p>
+              </li>
+            </section>
+          </section>
         </ul>
       </div>
       <!-- 显示部分 -->
       <div class="buyer">
         <div class="display_wrap">
           <div class="buyer_sign">
-            <div class="laung" v-if="total_order_quantity">{{total_order_quantity}}</div>
+            <div class="laung" v-if="total_order_num">{{total_order_num}}</div>
             <i class="el-icon-success ele_sign clear" @click="to_hidden_list()"></i>
           </div>
           <div class="buyer_fee">
             <div ref="total">￥{{total}}</div>
             <div ref="fee">配送费￥5</div>
           </div>
-          <div class="total_cost" ref="deliver">还差20起送</div>
-          <div class="pay_for_order" style="display:none" ref="count">结算</div>
+          <div v-if="!total_order_num" class="total_cost" ref="deliver">还差20起送</div>
+          <div v-if="total_order_num" class="pay_for_order" ref="count">结算</div>
         </div>
       </div>
     </div>
@@ -152,7 +175,7 @@ export default {
     return {
       // 数量
       // 后台产品信息
-      foods_list: this.$store.state.food_request,
+      foods_list: this.$route.params.food_list,
       //   color:false
       current: 0,
       //设置样式
@@ -164,6 +187,7 @@ export default {
       spec_price: "",
       //改变购物车隐藏页面颜色
       index_data: 0,
+      food_data: "",
       // 购物车增加数量1
       add_data_first: "",
       // 添加购物车
@@ -182,7 +206,7 @@ export default {
       //总金额
       total: 0,
       //总订单数
-      total_order_quantity: 0,
+      total_order_num: 0,
       //购物车列表展示
       list_show: false,
       // 清空购物车时需传进的状态
@@ -193,31 +217,106 @@ export default {
       // 增加数量2下标
       event2: "",
       index3: "",
-      index4: ""
+      index4: "",
+      number: 0,
+      // 保存数量数组,
+      // /////
+      item_id_obj: {}
+      // show: false
     };
   },
   created() {
     // console.log(this.$route.params.food_list,111,this.$route.params.detail);
-    // console.log(this.$route.params.food_list,11111);
-    console.log(this.$store.state.food_request)
+    // console.log(this.$route.params.food_list);
   },
+  wacth: {},
+  computed: {},
   methods: {
-    // 商品详情
-    to_goodsDetail(detail){
-      this.$router.push({name:"goodsDetail", params:{goods_data:detail}})
-    },
-    //购物车清空
+    // 总价
+    totol_price(){
+      this.total=0;
+      for (const key in this.item_id_obj) {
+        for (const k in this.item_id_obj[key]) {
+          if (typeof this.item_id_obj[key][k] != "number") {
+            // return;
+          } else {
+            for (let i = 0; i < this.item_id_obj[key].food.length; i++) {
+             if (this.item_id_obj[key].food[i].food_id==k) {
+               this.total= this.item_id_obj[key][k]*this.item_id_obj[key].food[i].price+this.total;
 
-    // add_list() {},
-    // //减少数量2
-    // delete_list() {
-    //   delete_order_count();
-    // },
+             }
+              
+            }
+            
+          }
+        }
+      }
+    },
+    // 总数量
+    total_order_quantity() {
+     this.total_order_num=0;
+      for (const key in this.item_id_obj) {
+        for (const k in this.item_id_obj[key]) {
+          if (typeof this.item_id_obj[key][k] != "number") {
+            // return;
+          } else {
+            this.total_order_num += this.item_id_obj[key][k];
+          }
+        }
+      }
+      this.totol_price()
+      return this.total_order_num;
+    },
+    // 购物车清空
+    clear() {
+      this.item_id_obj = {};
+      this.total_order_quantity()
+      this.list_show = false;
+    },
+    // 循环隐藏购物车
+    loopbuyer() {},
+    // 循环食品规格
+    loopfood(id) {
+      let num = 0;
+      // console.log(id,"查看",this.food_data.item_id,this.food_data)
+      for (const i in this.item_id_obj[id]) {
+        if (typeof this.item_id_obj[id][i] == "number") {
+          num += this.item_id_obj[id][i];
+        }
+      }
+      return num;
+    },
+    // 判断数据是否存在
+    yesorno(id, id2) {
+      // console.log(id,id2)
+      if (id in this.item_id_obj) {
+        if (id2 in this.item_id_obj[id]) {
+          return this.item_id_obj[id][id2];
+          // return 10;
+        }
+      } else {
+        // console.log("不存在")
+      }
+    },
+    add_list(id, id2, v) {
+      this.add_order_count(id, id2);
+      this.total_order_quantity()
+    },
+    //减少数量2
+    delete_list(id, id2) {
+      // delete_order_count();
+      // console.log(id,num)
+      // this.arr[index].quantity=num-1;
+      // this.add_chart();
+      this.delete_order_count(id, id2);
+      this.total_order_quantity()
+    },
     //   隐藏购物车列表
     to_hidden_list() {
-      if (this.chart_data.cart.groups[0].length > 0) {
-        this.list_show = !this.list_show;
-      }
+      this.list_show = !this.list_show;
+      // if (this.chart_data.cart.groups[0].length > 0) {
+      //   this.list_show = !this.list_show;
+      // }
     },
     setColor(obj) {
       if (obj != null) {
@@ -237,18 +336,21 @@ export default {
       console.log(c.offsetTop);
       c.parentNode.style.top = -c.offsetTop + "px";
     },
-    change_spec_color(i) {
+    change_spec_color(i, item, food, foods) {
       this.index_data = i;
+      this.food_data = [item, food, foods];
+      console.log(foods, "))))");
       this.spec_name = this.basket_hidden_data.specfoods[this.index_data].name;
       this.spec_price = this.basket_hidden_data.specfoods[
         this.index_data
       ].price;
+      this.$forceUpdate();
     },
     to_hidden(eve, i, inde) {
       // 存隐藏下标
       this.hiden_index = "1" + i + "." + inde;
       // 获取餐馆id
-      this.rest_id = this.foods_list[i].restaurant_id;
+      this.rest_id = this.foods_list[inde].restaurant_id;
       // 更改订单数量
       this.add_data_first = eve.target.previousElementSibling;
       this.buyer_hide = !this.buyer_hide;
@@ -259,163 +361,91 @@ export default {
     buyer_hidden_one() {
       this.buyer_hide = !this.buyer_hide;
     },
-    buyer_hidden() {
-      this.index_data = 0;
+    buyer_hidden(v) {
+      // console.log(v, "00090");
       this.buyer_hide = !this.buyer_hide;
-      // 增加数量1
-      if (this.add_data_first != null) {
-        this.add_data_first.style.display = "inline-block";
-        let c = this.add_data_first.lastElementChild.innerHTML * 1;
-        // console.log(c);
-        this.add_data_first.lastElementChild.innerHTML = c += 1;
-        //
-        // console.log(this.current, "dddd");
-        let p = this.hiden_index + "." + this.index_data;
-        console.log(p, "dddd");
-        let k = this.hiden_arr.indexOf(p);
-        if (k == -1) {
-          console.log(123123);
-          // 获取餐馆详细信息
-          let foodArr = this.basket_hidden_data.specfoods[this.index_data];
-          let res_detail = {
-            attrs: [],
-            extra: {},
-            id: foodArr.food_id,
-            name: foodArr.name,
-            packing_fee: foodArr.packing_fee,
-            price: foodArr.price,
-            quantity: 1,
-            sku_id: foodArr.sku_id,
-            specs: foodArr.specs_name,
-            stock: foodArr.stock
-          };
-          this.arr.push(res_detail);
-          //调用加入购物车请求
-          this.add_chart();
-          this.hiden_arr.push(p);
-        } else {
-          this.arr[k].quantity += 1;
-        }
+      if (this.food_data == "") {
+        this.add_order_count(v[0].item_id, v[0].food_id, v);
+      } else {
+        this.add_order_count(
+          this.food_data[0],
+          this.food_data[1],
+          this.food_data[2]
+        );
       }
+      this.total_order_quantity()
+      console.log("+++++", this.food_data.item_id);
+      // 增加ta = 0;
     },
     // 增加数量2
-    add_order_count(eve, i, inde) {
-      //结算及起送费切换
-      this.$refs.deliver.style.display = "none";
-      this.$refs.count.style.display = "block";
-      //获取餐馆id
-      this.rest_id = this.foods_list[i].restaurant_id;
-      // 更改订单数量
-      let a = eve.target.previousElementSibling;
-      if (a != null) {
-        eve.target.previousElementSibling.style.display = "inline-block";
-        let c = a.lastElementChild.innerHTML * 1;
-        a.lastElementChild.innerHTML = c += 1;
-        // console.log(a.lastElementChild.innerHTML, "hkhkh");
-        let f = i + "." + inde;
-        let h = this.arr_index.indexOf(f);
-        if (h == -1) {
-          // 获取餐馆详细信息
-          let foodArr = this.foods_list[i].foods[inde].specfoods[0];
-          console.log(foodArr,"ccccc")
-          let res_detail = {
-            attrs: [],
-            extra: {},
-            id: foodArr.food_id,
-            name: foodArr.name,
-            packing_fee: foodArr.packing_fee,
-            price: foodArr.price,
-            quantity: a.lastElementChild.innerHTML * 1,
-            sku_id: foodArr.sku_id,
-            specs: foodArr.specs,
-            stock: foodArr.stock
-          };
-          this.arr.push(res_detail);
-          //调用加入购物车请求
-          this.add_chart();
-          this.arr_index.push(f);
-          //   console.log(this.arr_index, 1111);
+    add_order_count(id, foodid, foo) {
+      // console.log(foo, "shipin");
+      if (id in this.item_id_obj) {
+        if (foodid in this.item_id_obj[id]) {
+          this.item_id_obj[id][foodid] += 1;
+          if (!typeof foo) {
+            // console.log(this.item_id_obj[id])
+            this.item_id_obj[id].food = foo;
+          }
+          this.$forceUpdate();
+          // return;
         } else {
-          console.log(this.arr);
-          this.add_chart();
-          this.arr[h].quantity += 1;
-        }
-      }
-    },
-    // 减少数量2
-    delete_order_count(eve, i, inde) {
-      this.event1 = eve;
-      this.index1 = i;
-      this.index2 = inde;
-      let d = eve.target.nextElementSibling.innerHTML * 1;
-      let h = i + "." + inde;
-      console.log(this.arr_index, "hhh");
-      let g = this.arr_index.indexOf(h);
-      if (d > 1) {
-        //减少数量
-        eve.target.nextElementSibling.innerHTML = d -= 1;
-        // 购物车后台请求数量减少
-        if (this.arr[g].quantity > 1) {
-          this.arr[g].quantity -= 1;
-          //调用加入购物车请求
-          this.add_chart();
+          this.item_id_obj[id][foodid] = 1;
+          this.item_id_obj[id].food = foo;
         }
       } else {
-        // 数量填写
-        // console.log(eve.target.nextElementSibling.innerHTML,"9999")
-        // 显示数量为1时
-        //购物车后台数量剩1时
-        console.log(g, 1212);
-        this.arr[g].quantity -= 1;
-        //调用加入购物车请求
-        console.log(this.arr[g].quantity);
-        this.add_chart();
-        // this.arr.splice(g, 1);
-        // this.arr_index.splice(h);
-        eve.target.parentElement.style.display = "none";
-        eve.target.nextElementSibling.innerHTML = "0";
-        if (this.arr.length == 0) {
-          //结算及起送费切换
-          console.log(7777);
-          this.$refs.deliver.style.display = "block";
-          this.$refs.count.style.display = "none";
-        }
+        this.item_id_obj[id] = {};
+        this.item_id_obj[id][foodid] = 1;
+        this.item_id_obj[id].food = foo;
       }
+      this.total_order_quantity();
+      this.$forceUpdate();
+      this.food_data = "";
     },
-    //添加购物车
-    add_chart() {
-      //   加入购物车请求接口
-      this.$http({
-        method: "post",
-        url: "https://elm.cangdu.org/v1/carts/checkout",
-        data: {
-          restaurant_id: this.rest_id,
-          geohash:
-            this.$route.params.detail.longitude +
-            "," +
-            this.$route.params.detail.latitude,
-          entities: [this.arr]
-        }
-      }).then(res => {
-        // console.log(this.arr);
-        // 总订单数
-        this.total_order_quantity = 0;
-        // 总金额
-        this.total = 0;
-        console.log(this.arr,1111,res.data);
-        this.chart_data = res.data;
-        // for (let i = 0; i < res.data.cart.groups[0].length; i++) {
-        //   let q = res.data.cart.groups[0][i].quantity;
-        //   let p = res.data.cart.groups[0][i].price;
-        //   // 总金额
-        //   let s = q * 1 * (p * 1);
-        //   this.total = this.total * 1 + s;
-        //   console.log(q, p, s, this.total);
-        //   // 总订单数
-        //   this.total_order_quantity = this.total_order_quantity + q;
-        // }
-      });
+    // 减少数量2
+    delete_order_count(id, foodid, i, inde) {
+      if (this.item_id_obj[id][foodid] == 0) {
+        // console.log(id,foodid)
+        return;
+      } else {
+        this.item_id_obj[id][foodid] -= 1;
+        this.$forceUpdate();
+      }
+      this.total_order_quantity();
     }
+  },
+  //添加购物车
+  add_chart() {
+    //   加入购物车请求接口
+    this.$http({
+      method: "post",
+      url: "https://elm.cangdu.org/v1/carts/checkout",
+      data: {
+        restaurant_id: this.rest_id,
+        geohash:
+          this.$route.params.detail.longitude +
+          "," +
+          this.$route.params.detail.latitude,
+        entities: [this.arr]
+      }
+    }).then(res => {
+      // 总订单数
+      this.total_order_quantity = 0;
+      // 总金额
+      this.total = 0;
+      console.log(res.data);
+      this.chart_data = res.data;
+      for (let i = 0; i < res.data.cart.groups[0].length; i++) {
+        let q = res.data.cart.groups[0][i].quantity;
+        let p = res.data.cart.groups[0][i].price;
+        // 总金额
+        let s = q * 1 * (p * 1);
+        this.total = this.total * 1 + s;
+        console.log(q, p, s, this.total);
+        // 总订单数
+        this.total_order_quantity = this.total_order_quantity + q;
+      }
+    });
   }
 };
 </script>
