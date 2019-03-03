@@ -75,13 +75,15 @@ export default {
   width: 100%;
 }
 .content_wrap {
+  position: relative;
   box-sizing: border-box;
-  padding-top: 50px;
-  margin-top: 20px;
+  top: 50px;
+  /* margin-top: 20px; */
   width: 100%;
   /* height: 73px; */
   padding-left: 3%;
   /* background-color: pink; */
+
 }
 .description {
   height: 10px;
