@@ -2,7 +2,7 @@
   <div class="store">
     <!-- 显示页面 -->
     <div class="store_detail_wrap" v-if="page">
-      <!-- 背景图片设置 -->
+      <!-- 背景图片设置 tips-->
       <img :src="'//elm.cangdu.org/img/'+store_data.image_path" alt class="background_pic">
       <!-- 导航条 -->
       <div class="store_detail_nav" @click="back()">
@@ -85,21 +85,24 @@
 export default {
   data() {
     return {
-      store_data: this.$route.params.store_data,
+      // localStorage.restaruant_data=this.category
+      store_data: this.$route.params.store_data||this.$store.state.restaruant_data,
       page: true,
       food_request:[],
       skyblue:false
     };
   },
   created() {
+    console.log(this.$store.state.restaruant_data)
+    console.log(document.getElementsByClassName("goods_wrap")[0],'0000')
     this.getRestaurant();
     this.getDetails();
     // console.log(this.$route.params.store_data,0000000);
-    // console.log("cccbbb", this.store_data.activities[0].icon_color)
+    // console.log("cccbbb", this.store_data.activities[0].icon_color
   },
   methods: {
     back() {
-      this.$router.go(-1);
+      this.$router.push({name:"shophome"})
     },
     // 点击隐藏
     to_fetch_hiden() {
@@ -137,7 +140,7 @@ export default {
         this.food_request=res.data;
         this.$store.commit('revise',res.data)
         console.log(res.data,1111111);
-
+         this.$router.push({name:"goods",params:{food_list:this.food_request,detail:this.store_data}})
       });
     }
   }
@@ -327,6 +330,11 @@ color: #666;
   padding: 20px 5%;
   color: white;
   overflow: hidden;
+  position: absolute;
+  top:0;
+  bottom:0;
+  width:100%;
+  text-align: center;
 }
 .store_name {
   height: 28px;

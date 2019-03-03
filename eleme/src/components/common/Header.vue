@@ -85,7 +85,8 @@ export default {
   top: 26px;
   margin-top: -10.5px;
   color: white;
-  text-align: center;
+  text-align: right;
+  width: 30%;
   line-height: 21px;
   font-weight: 1000;
   font-size: 18px;

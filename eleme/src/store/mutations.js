@@ -46,5 +46,9 @@ export default {
     // 商品状态修改
 revise(state,value){
 this.state.food_request=value;
-}
+},
+// 商铺信息
+    updaterestaruant_data(state,v) {
+        this.state.restaruant_data=v;
+    }
 }

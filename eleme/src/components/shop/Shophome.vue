@@ -196,6 +196,8 @@ export default {
     to_store_details(m) {
       console.log(m);
       this.$router.push({ name: "storeDetail", params: { store_data: m } });
+       console.log(this.category)
+      this.$store.commit("updaterestaruant_data",m)
     }
   },
   components: {

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Header :left_msg="left" :middle_msg="middle" :right_msg="right"></Header>
+    <i class="el-icon-arrow-left" style="z-index:1000;position:fixed;top:10px;left:10px;color:white;font-size:30px;" @click="got01()"></i>
+    <Header :middle_msg="middle" :right_msg="right"></Header>
     <div class="img_wrap">
       <img :src="'//elm.cangdu.org/img/'+goods_data.image_path">
     </div>
@@ -53,6 +54,12 @@ export default {
   },
   components: {
     Header
+  },
+  methods:{
+    got01(){
+      this.$router.push({name:"storeDetail"})
+      console.log("!!!!")
+    },
   }
 };
 </script>
@@ -68,7 +75,9 @@ export default {
   width: 100%;
 }
 .content_wrap {
-  padding-top: 40px;
+  box-sizing: border-box;
+  padding-top: 50px;
+  margin-top: 20px;
   width: 100%;
   /* height: 73px; */
   padding-left: 3%;

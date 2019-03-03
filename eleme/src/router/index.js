@@ -15,6 +15,7 @@ import Rate from '@/components/shop/Rate'
 import GoodsDetail from '@/components/shop/GoodsDetail'
 import ConfirmOrder from '@/components/shop/ConfirmOrder'
 import SearchResturant from '@/components/shop/SearchResturant'
+import Makeorder from '@/components/shop/Makeorder'
 // 新增
 import Money from '@/components/my/son/Money'
 import Balance_m from "@/components/my/son/Balance_m";
@@ -69,7 +70,7 @@ export default new Router({
       path: '/storeDetail',
       name: 'storeDetail',
       component: StoreDetail,
-      redirect:{name:'goods'},
+      // redirect:{name:'goods'},
       children:[
         {
           path: '/goods',
@@ -157,6 +158,11 @@ export default new Router({
           path: '/order_con',
           name: 'order_con',
           component: Order_con,
+        }, 
+        {
+          path: '/makeorder',
+          name: 'makeorder',
+          component: Makeorder,
         },
   ]
 })

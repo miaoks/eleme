@@ -2,7 +2,8 @@
 <template>
   <div class="wrap">
     <!-- 导航条 -->
-    <Header :left_msg="left" :middle_msg="middle" :right_msg="right"></Header>
+    <i class="el-icon-arrow-left" style="z-index:1000;position:fixed;top:10px;left:10px;color:white;font-size:30px;" @click="got0()"></i>
+    <Header :middle_msg="middle" :right_msg="right"></Header>
     <!--  -->
     <div class="activities">
       <ul class="act_wrap">
@@ -78,6 +79,10 @@ export default {
     console.log(this.nav_data, "ccc");
   },
   methods: {
+    got0(){
+      this.$router.push({name:"storeDetail"})
+      console.log("!!!!")
+    },
       company_detail(){
           this.$router.push({name:"companyDetail", params:{company_detail:this.nav_data.identification}})
       }
