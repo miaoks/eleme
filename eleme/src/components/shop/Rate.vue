@@ -265,6 +265,7 @@ export default {
   background-color: white;
   margin-bottom: 10px;
   display: flex;
+  /* position: fixed; */
 }
 .header_left {
   width: 10%;
