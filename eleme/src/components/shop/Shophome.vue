@@ -194,7 +194,7 @@ export default {
     },
     // 跳转店铺详情
     to_store_details(m) {
-      console.log(m);
+      console.log(m,11);
       this.$router.push({ name: "storeDetail", params: { store_data: m } });
        console.log(this.category)
       this.$store.commit("updaterestaruant_data",m)

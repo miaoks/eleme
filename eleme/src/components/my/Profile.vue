@@ -120,7 +120,7 @@
       // 我的订单
       tomyorder(){
         // 这里设置跳转到订单的路由
-
+        this.$router.push({name:"order"})
       },
       // 我的积分
       toLntegral(){

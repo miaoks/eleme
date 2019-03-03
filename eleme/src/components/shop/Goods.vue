@@ -70,7 +70,7 @@
                               v-text="loopfood(detail.item_id)"
                             ></span>
                       </span>
-                      <span class="add_choose" @click="to_hidden($event,i,inde,detail.item_id)">选规格</span>
+                      <span class="add_choose" @click.stop="to_hidden($event,i,inde,detail.item_id)">选规格</span>
                       </span>
                       <span class="add_but" v-else>
                           <span v-if="yesorno(detail.item_id,detail.specfoods[0].food_id)">

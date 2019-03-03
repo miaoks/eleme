@@ -15,7 +15,7 @@
                </div>
            </div>
            <div style="width:100;padding:5px;box-sizing:border-box;text-align:right;">
-               <div style="border:1px solid #3E90E8;color:#3E90E8;display:inline-block;padding:3px;border-radius:5px;font-size:12px;" v-if="v.status_bar.title=='支付超时'">再来一单</div>
+               <div style="border:1px solid #3E90E8;color:#3E90E8;display:inline-block;padding:3px;border-radius:5px;font-size:12px;" v-if="v.status_bar.title=='支付超时'" @click.stop="gotoshop(v)">再来一单</div>
                <div v-else style="border:1px solid #f20;color:#F20;display:inline-block;padding:3px;border-radius:5px;font-size:12px;">
                 去支付(还剩<span>{{parseInt((900-v.time_pass)/60)}}</span>分<span>{{(900-v.time_pass)%60}}</span>秒)
                </div>
@@ -45,6 +45,16 @@ export default {
     //   this.updatetime();
   },
   methods: {
+    // 去商店
+    gotoshop(v){
+      console.log(v)
+      this.$http({
+        method:"get",
+        url:"https://elm.cangdu.org/shopping/restaurant/"+v.restaurant_id
+      }).then(res=>{
+        this.$router.push({name:"storeDetail",params:{store_data:res.data}})
+      })
+    },
     // 去订单详情
     to_order_con(o){
         this.$router.push({name:'order_con',params:{o:o}})

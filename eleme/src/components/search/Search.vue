@@ -7,7 +7,7 @@
         <button class="ser_btn" @click="serbtn">提交</button>
       </section>
       <!-- 搜索内容 -->
-      <ul v-if="storearr.length>0">
+      <ul v-if="storearr.length>0" class="ul11">
         <p style="padding:3%;background:#F2F2F2;width:100%;box-sizing:border-box;">商家</p>
         <li v-for="(res,index) in storearr" :key="index" class="lione" @click="goshop(res)">
           <div style="vertical-align: top;margin-left:10px;">
@@ -106,11 +106,14 @@ export default {
   position: absolute;
   top: 52px;
   left: 0;
+  right: 0;
   bottom: 0;
-  width: 100%;
+  /* width: 100%; */
   background: #f2f2f2;
 }
 .ser_sec1 {
+  width: 100%;
+  height: 60px;
   box-sizing: border-box;
   padding: 3%;
   display: flex;
@@ -120,6 +123,10 @@ export default {
 .ser_ul {
   width: 100%;
   background: white;
+  position: absolute;
+  top: 75px;
+  width: 96%;
+  box-sizing: border-box;
 }
 .ser_ul li {
   box-sizing: border-box;
@@ -152,5 +159,11 @@ export default {
 }
 .lione div {
   display: inline-block;
+}
+.ul11{
+  position: absolute;
+  top: 75px;
+  width: 96%;
+  box-sizing: border-box;
 }
 </style>
