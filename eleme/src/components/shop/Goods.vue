@@ -308,6 +308,7 @@
         }
       },
       add_list(id, id2, v) {
+        console.log('111')
         this.add_order_count(id, id2);
         this.total_order_quantity()
       },
