@@ -8,7 +8,7 @@ export default {
     updated_guess_city(state, guess_city) {
         // console.log(state,guess_city)
         this.state.guess_city_infor = guess_city;
-        console.log(this.state.guess_city_infor)
+        // console.log(this.state.guess_city_infor)
     },
     history(state, v) {
         this.state.history.unshift(v)

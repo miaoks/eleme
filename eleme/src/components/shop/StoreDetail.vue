@@ -93,10 +93,10 @@ export default {
     };
   },
   created() {
-    console.log(this.$store.state.restaruant_data)
+    console.log(this.$store.state,11111)
     console.log(document.getElementsByClassName("goods_wrap")[0],'0000')
     this.getRestaurant();
-    this.getDetails();
+    // this.getDetails();
     // console.log(this.$route.params.store_data,0000000);
     // console.log("cccbbb", this.store_data.activities[0].icon_color
   },
@@ -109,17 +109,17 @@ export default {
       this.page = !this.page;
     },
     // 获取餐馆详情
-    getDetails() {
-      this.$http({
-        type: "GET",
-        url: "https://elm.cangdu.org/shopping/restaurant/1",
-        params: {
-          shopid: this.store_data.id
-        }
-      }).then(res => {
-        console.log(res.data,"hhhh");
-      });
-    },
+    // getDetails() {
+    //   this.$http({
+    //     type: "GET",
+    //     url: "https://elm.cangdu.org/shopping/restaurant/1",
+    //     params: {
+    //       shopid: this.store_data.id
+    //     }
+    //   }).then(res => {
+    //     console.log(res.data,"hhhh");
+    //   });
+    // },
     // 跳转到餐馆信息里
     tostoreInfo() {
       console.log("111");
@@ -139,7 +139,7 @@ export default {
       }).then(res => {
         this.food_request=res.data;
         this.$store.commit('revise',res.data)
-        console.log(res.data,1111111);
+        console.log(res.data,1111111,this.store_data.id);
          this.$router.push({name:"goods",params:{food_list:this.food_request,detail:this.store_data}})
       });
     }

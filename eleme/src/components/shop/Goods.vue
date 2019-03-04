@@ -76,7 +76,7 @@
                           <span v-if="yesorno(detail.item_id,detail.specfoods[0].food_id)">
                             <i
                               class="el-icon-remove-outline add_choice_second"
-                              @click="delete_order_count(detail.item_id,detail.specfoods[0].food_id,i,inde)"
+                              @click.stop="delete_order_count(detail.item_id,detail.specfoods[0].food_id,i,inde)"
                             ></i>
                             <span
                               class="add_count_second"

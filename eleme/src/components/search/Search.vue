@@ -60,8 +60,8 @@
     },
     methods: {
       serbtn() {
-        console.log(this.$store.state, 1111);
-        console.log(this.input10);
+        // console.log(this.$store.state, 1111);
+        // console.log(this.input10);
         if (this.input10 != "") {
           this.$set(this.inphistory, this.inphistory.length, this.input10);
           this.$http({
@@ -74,7 +74,7 @@
               keyword: this.input10
             }
           }).then(res => {
-            console.log(res, 0);
+            // console.log(res, 0);
             this.storearr = res.data;
           });
         }
@@ -88,13 +88,20 @@
         this.conOrhistory = false;
       },
       goshop(v) {
+        console.log(v,1111)
+        this.$http({
+        method:"get",
+        url:"https://elm.cangdu.org/shopping/restaurant/"+v.id
+      }).then(res=>{
+        console.log(res.data,22222)
         this.$router.push({
-          name: "shophome",
+          name: "storeDetail",
           params: {
-            store_date: v
+            store_data: res.data
           }
         })
-        console.log(v, '水水水水')
+      })
+        
       }
     },
   };
