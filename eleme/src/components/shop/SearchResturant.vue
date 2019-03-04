@@ -75,8 +75,8 @@
       <div class="nav_con" v-if="index==3">
         <div class="cont">
           <p style="margin-bottom:2%;">配送方式</p>
-          <div class="chose1" @click="songstyle(1)" :class="{'givestyle':songstyle(1)}">
-            <span v-if="songstyle(1)" style="color:red">鸟&nbsp;</span>
+          <div class="chose1" @click="songstyle()" :class="{'givestyle':!song}">
+            <span v-if="song" style="color:red">鸟&nbsp;</span>
             <span v-else>✔&nbsp;</span> 蜂鸟专送
           </div>
         </div>
@@ -174,7 +174,8 @@ export default {
       value5: 3,
       idarr: [],
       sortclass: "",
-      delivery_modearr:[]
+      delivery_modearr:[],
+      song:false,
     };
   },
   components: {
@@ -182,7 +183,6 @@ export default {
     Footer
   },
   created() {
-    console.log(this.$store.state.guess_city_infor);
     if (this.$store.state.guess_city_infor) {
       //   获取所有商铺分类列表
       this.$http({
@@ -193,7 +193,6 @@ export default {
           longitude: this.$store.state.guess_city_infor.longitude
         }
       }).then(res => {
-        console.log(res.data, "第一列");
         this.classlist = res.data;
       });
       //   请求商家列表 第三列
@@ -206,7 +205,6 @@ export default {
           longitude: this.$store.state.guess_city_infor.longitude
         }
       }).then(re => {
-        console.log(re.data, "第三列");
         //   this.classlist=res.data;
         this.sjlist = re.data;
       });
@@ -220,8 +218,6 @@ export default {
           restaurant_category_id: 20
         }
       }).then(r => {
-        console.log(r.data, 111111);
-        console.log(this.$store.state.guess_city_infor.longitude);
         this.store_data = r.data;
       });
     } else {
@@ -243,8 +239,6 @@ export default {
     },
     //   详细分类
     search_food(id) {
-      console.log(id);
-      console.log("to_store_details ");
       this.$http({
         method: "get",
         url: "https://elm.cangdu.org/shopping/restaurants",
@@ -254,7 +248,7 @@ export default {
           restaurant_category_ids: [id]
         }
       }).then(r => {
-        (this.index = ""), console.log(r.data, 111111);
+        this.index = "";
         this.store_data = r.data;
       });
     },
@@ -277,12 +271,10 @@ export default {
     },
     // 对餐馆筛选
     filter(id) {
-        console.log(this.cycle(id))
         if (this.cycle(id)) {
             this.idarr.splice(this.cycle(id)-1,1)
         }else{
             this.idarr.push(id);
-      console.log(this.idarr, "添加");
         }
     },
     cleararr() {
@@ -290,18 +282,17 @@ export default {
       console.log(this.idarr, "清空");
     },
     // 配送方式
-    songstyle(id) {
+    songstyle() {
         if (this.delivery_modearr[0]==1) {
             this.delivery_modearr=[]
-            return false;
+            this.song=false;
         }else{
             this.delivery_modearr=[1]
-            return true;
+             this.song=true;
         }
     },
     // 筛选后请求
     btn_m() {
-      console.log("请求");
       this.$http({
         method: "get",
         url: "https://elm.cangdu.org/shopping/restaurants",
@@ -313,7 +304,6 @@ export default {
         }
       }).then(r => {
           this.index=""
-        console.log(r.data, "筛选结果");
         this.store_data = r.data;
       });
     },
@@ -327,7 +317,7 @@ export default {
     },
     // 去商店详情
     to_store_details(id) {
-      // this.$router.push({name:"storeDetail",params:{store_data:id}})
+      this.$router.push({name:"storeDetail",params:{store_data:id}})
     }
   }
 };

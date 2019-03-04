@@ -268,7 +268,7 @@ export default {
   /* background-color: gray; */
   bottom: 0;
   left: 23%;
-  font-size: 14px;
+  font-size: 12px;
   text-align: center;
   line-height: 20px;
   color: #666;

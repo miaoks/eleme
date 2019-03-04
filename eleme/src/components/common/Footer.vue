@@ -74,4 +74,10 @@
         background:#23AAFF;
         color:white;
     }
+    .router-link-active{
+        color: blue;
+    }
+    .active {
+        color: aqua;
+    }
 </style>
