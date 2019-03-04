@@ -77,9 +77,11 @@ export default {
 .content_wrap {
   position: relative;
   box-sizing: border-box;
-  top: 50px;
+  padding-top: 50px;
   /* margin-top: 20px; */
   width: 100%;
+  position: absolute;
+  top: 377px;
   /* height: 73px; */
   padding-left: 3%;
   /* background-color: pink; */
