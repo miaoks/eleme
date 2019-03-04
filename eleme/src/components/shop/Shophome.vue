@@ -7,7 +7,7 @@
       <swiper :options="swiperOption"  v-if="category_first.length>0">
         <swiper-slide>
           <ul>
-            <li class="special" v-for="(value,index) in category_first" :key="index" @click="to_restaruant()">
+            <li class="special" v-for="(value,index) in category_first" :key="index" @click.stop="to_restaruant()">
               <div class="special_wrap">
                 <img class="special_img" :src="'https://fuss10.elemecdn.com/'+value.image_url">
                 <div class="special_txt">{{value.title}}</div>
@@ -17,7 +17,7 @@
         </swiper-slide>
         <swiper-slide >
           <ul>
-            <li class="special" v-for="(value,index) in category_second" :key="index" @click="to_restaruant()">
+            <li class="special" v-for="(value,index) in category_second" :key="index" @click.stop="to_restaruant()">
               <div class="special_wrap">
                 <img class="special_img" :src="'https://fuss10.elemecdn.com/'+value.image_url">
                 <div class="special_txt">{{value.title}}</div>
@@ -232,6 +232,7 @@ export default {
   position: relative;
   top: 52px;
   overflow: hidden;
+  z-index: 2000;
 }
 .swiper-container {
   padding-top: 5px;
