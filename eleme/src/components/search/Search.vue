@@ -95,6 +95,7 @@ export default {
     },
     goshop(v){
     this.$router.push({name:"shophome",params:{store_date:v}})
+    console.log(v,10)
   }
   },
   
@@ -108,7 +109,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  /* width: 100%; */
+  width: 100%;
   background: #f2f2f2;
 }
 .ser_sec1 {
@@ -125,7 +126,7 @@ export default {
   background: white;
   position: absolute;
   top: 75px;
-  width: 96%;
+  /* width: 96%; */
   box-sizing: border-box;
 }
 .ser_ul li {
@@ -163,7 +164,7 @@ export default {
 .ul11{
   position: absolute;
   top: 75px;
-  width: 96%;
+  width: 100%;
   box-sizing: border-box;
 }
 </style>
